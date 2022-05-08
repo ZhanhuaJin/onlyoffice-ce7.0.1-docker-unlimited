@@ -45,6 +45,11 @@ RUN pkg /build/build_tools/out/linux_64/onlyoffice/documentserver/server/DocServ
 FROM onlyoffice/documentserver:${product_version}.${build_number}
 ARG oo_root
 
+# Enable mobile edit feature
+RUN sed -i 's/isSupportEditFeature=function(){return!1}/isSupportEditFeature=function(){return 1}/g' /var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/mobile/dist/js/app.js
+RUN sed -i 's/isSupportEditFeature=function(){return!1}/isSupportEditFeature=function(){return 1}/g' /var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/mobile/dist/js/app.js
+RUN sed -i 's/isSupportEditFeature=function(){return!1}/isSupportEditFeature=function(){return 1}/g' /var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/mobile/dist/js/app.js
+
 #server
 COPY --from=build-stage /build/converter  ${oo_root}/server/FileConverter/converter
 COPY --from=build-stage /build/docservice ${oo_root}/server/DocService/docservice
